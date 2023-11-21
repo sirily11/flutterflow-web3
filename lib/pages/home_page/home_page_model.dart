@@ -22,6 +22,8 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   final unfocusNode = FocusNode();
   // Stores action output result for [Custom Action - listCandidates] action in HomePage widget.
   List<CandidateStruct>? fetchCandidateResults;
+  // Stores action output result for [Custom Action - listCandidates] action in ListView widget.
+  List<CandidateStruct>? newCandidates;
 
   /// Initialization and disposal methods.
 

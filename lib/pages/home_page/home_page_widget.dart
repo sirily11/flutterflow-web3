@@ -112,10 +112,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               final candidateList = _model.candidates.toList();
               return RefreshIndicator(
                 onRefresh: () async {
+                  _model.newCandidates = await actions.listCandidates();
                   setState(() {
-                    _model.isLoading = true;
+                    _model.candidates = _model.fetchCandidateResults!
+                        .toList()
+                        .cast<CandidateStruct>();
                   });
-                  await actions.listCandidates();
                 },
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
