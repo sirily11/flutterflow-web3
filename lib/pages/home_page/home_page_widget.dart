@@ -1,7 +1,6 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -32,11 +31,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       setState(() {
         _model.isLoading = true;
       });
-      unawaited(
-        () async {
-          _model.candidates = await actions.listCandidates();
-        }(),
-      );
+      _model.candidates = await actions.listCandidates();
       setState(() {
         _model.isLoading = false;
       });
