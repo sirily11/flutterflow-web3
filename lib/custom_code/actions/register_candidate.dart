@@ -15,35 +15,28 @@ final _contractAbi = ContractAbi.fromJson(
   'Ballot',
 );
 
-Future<List<CandidateStruct>> listCandidates() async {
-  // Add your function code here!
-  final apiUrl = "https://rpc1.aries.axiomesh.io"; //Replace with your API
-
+Future registerCandidate(String? name) async {
+  final apiUrl = "https://rpc1.aries.axiomesh.io";
   final httpClient = Client();
   final ethClient = Web3Client(apiUrl, httpClient);
   final contractAddress = "0x2467F498d9b139a7761f61442790B3d4451431e4";
 
+  final privateKey = FFAppState().privateKey;
+  final credentials = EthPrivateKey.fromHex(privateKey);
+
   final contract =
       DeployedContract(_contractAbi, EthereumAddress.fromHex(contractAddress));
-  final candidatesFunction = contract.function('getResults');
-  final params = [];
-  final candidates = await ethClient.call(
-    contract: contract,
-    function: candidatesFunction,
-    params: params,
+  final registerCandidateFunction = contract.function('registerCandidate');
+  final params = [
+    name,
+  ];
+  await ethClient.sendTransaction(
+    credentials,
+    Transaction.callContract(
+      contract: contract,
+      function: registerCandidateFunction,
+      parameters: params,
+    ),
+    chainId: 23411,
   );
-
-  final candidatesResult = (candidates[0] as List).map((e) {
-    final String name = e[0];
-    final BigInt count = e[1];
-    final EthereumAddress address = e[2];
-
-    return CandidateStruct(
-      name: name,
-      address: address.hex,
-      count: count.toInt(),
-    );
-  }).toList();
-
-  return candidatesResult;
 }

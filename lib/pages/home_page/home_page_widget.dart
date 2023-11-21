@@ -1,3 +1,4 @@
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -28,12 +29,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.fetchCandidateResults = await actions.listCandidates();
       setState(() {
-        _model.isLoading = true;
-      });
-      _model.candidates = await actions.listCandidates();
-      setState(() {
-        _model.isLoading = false;
+        _model.candidates =
+            _model.fetchCandidateResults!.toList().cast<CandidateStruct>();
       });
     });
   }
@@ -65,6 +64,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            context.pushNamed('RegistrationPage');
+          },
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          elevation: 8.0,
+          child: Icon(
+            Icons.add,
+            color: FlutterFlowTheme.of(context).info,
+            size: 24.0,
+          ),
+        ),
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
@@ -79,7 +90,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               size: 30.0,
             ),
             onPressed: () async {
-              context.pop();
+              context.pushNamed('PrivateKeyPage');
             },
           ),
           title: Text(
@@ -96,12 +107,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Visibility(
-            visible: _model.isLoading == false,
-            child: Builder(
-              builder: (context) {
-                final candidateList = _model.candidates!.toList();
-                return ListView.builder(
+          child: Builder(
+            builder: (context) {
+              final candidateList = _model.candidates.toList();
+              return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {
+                    _model.isLoading = true;
+                  });
+                  await actions.listCandidates();
+                },
+                child: ListView.builder(
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.vertical,
                   itemCount: candidateList.length,
@@ -126,9 +142,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       dense: false,
                     );
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

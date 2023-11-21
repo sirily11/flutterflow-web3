@@ -8,11 +8,20 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
 
   bool isLoading = true;
 
+  List<CandidateStruct> candidates = [];
+  void addToCandidates(CandidateStruct item) => candidates.add(item);
+  void removeFromCandidates(CandidateStruct item) => candidates.remove(item);
+  void removeAtIndexFromCandidates(int index) => candidates.removeAt(index);
+  void insertAtIndexInCandidates(int index, CandidateStruct item) =>
+      candidates.insert(index, item);
+  void updateCandidatesAtIndex(int index, Function(CandidateStruct) updateFn) =>
+      candidates[index] = updateFn(candidates[index]);
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
   // Stores action output result for [Custom Action - listCandidates] action in HomePage widget.
-  List<CandidateStruct>? candidates;
+  List<CandidateStruct>? fetchCandidateResults;
 
   /// Initialization and disposal methods.
 
