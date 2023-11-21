@@ -103,7 +103,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 final candidateList = _model.candidates!.toList();
                 return ListView.builder(
                   padding: EdgeInsets.zero,
-                  shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   itemCount: candidateList.length,
                   itemBuilder: (context, candidateListIndex) {
@@ -114,7 +113,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         style: FlutterFlowTheme.of(context).titleLarge,
                       ),
                       subtitle: Text(
-                        'Subtitle goes here...',
+                        candidateListItem.count.toString(),
                         style: FlutterFlowTheme.of(context).labelMedium,
                       ),
                       trailing: Icon(
